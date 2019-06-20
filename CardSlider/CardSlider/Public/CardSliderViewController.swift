@@ -25,6 +25,8 @@ public protocol CardSliderDataSource: class {
 	
 	/// Total number of cards.
 	func numberOfItems() -> Int
+    
+    func showDetail(item: Int)
 }
 
 /// A view controller displaying a slider of cards, represented by CardSliderItems.
@@ -42,13 +44,19 @@ open class CardSliderViewController: UIViewController, UIScrollViewDelegate {
 	@IBOutlet private var scrollView: UIScrollView!
 	@IBOutlet private var scrollStack: UIStackView!
 	@IBOutlet private var scrollPlaceholderView: UIView!
-	private weak var cardSnapshot: UIView?
+	
+    @IBOutlet weak var showDetail: UIButton!
+    
+    private weak var cardSnapshot: UIView?
 	private weak var cardTitleSnapshot: UIView?
 	private weak var openCardCell: UICollectionViewCell?
 	private var animator: UIViewPropertyAnimator?
 	private let cellID = "CardCell"
 	
-	
+    @IBAction func showDetailEvent(_ sender: UIButton) {
+        dataSource.showDetail(item: sender.tag)
+    }
+    
 	/// Instantiate CardSliderViewController.
 	///
 	/// - Parameter dataSource: CardSliderDataSource
@@ -68,6 +76,8 @@ open class CardSliderViewController: UIViewController, UIScrollViewDelegate {
 		collectionView.isPagingEnabled = true
 		collectionView.showsHorizontalScrollIndicator = false
 		collectionView.delaysContentTouches = false
+        showDetail.isHidden = true
+        
 	}
 	
 	open override var title: String? {
@@ -155,6 +165,13 @@ open class CardSliderViewController: UIViewController, UIScrollViewDelegate {
 		guard let cell = collectionView.cellForItem(at: indexPath) else { return }
 		openCardCell = cell
 		
+        showDetail.isHidden = false
+        showDetail.tag = indexPath.item
+        scrollView.isUserInteractionEnabled = true
+        
+        cardTitleContainer.layoutIfNeeded()
+        cardTitleContainer.layoutSubviews()
+        
 		let cardTitleSnapshot = cardTitleContainer.renderSnapshot()
 		self.cardTitleSnapshot = cardTitleSnapshot
 		
@@ -183,6 +200,8 @@ open class CardSliderViewController: UIViewController, UIScrollViewDelegate {
 		guard !scrollView.isHidden, isShowingDescription else { return }
 		isShowingDescription = false
 		
+        showDetail.isHidden = true
+        
 		let scrollviewSnapshot = scrollView.snapshotView(afterScreenUpdates: false)!
 		view.addSubview(scrollviewSnapshot)
 		scrollviewSnapshot.frame = scrollView.frame
@@ -250,14 +269,15 @@ extension CardSliderViewController: UICollectionViewDelegate, UICollectionViewDa
 	}
 	
 	public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		collectionView.deselectItem(at: indexPath, animated: true)
-		if CGFloat(indexPath.item) != collectionView.contentOffset.x / collectionView.bounds.width {
-			collectionView.setContentOffset(CGPoint(x: collectionView.bounds.width * CGFloat(indexPath.item), y: 0), animated: true)
-			return
-		}
-		
-		showCardDescription(for: indexPath)
-	}
+        collectionView.deselectItem(at: indexPath, animated: true)
+        if CGFloat(indexPath.item) != collectionView.contentOffset.x / collectionView.bounds.width {
+            collectionView.setContentOffset(CGPoint(x: collectionView.bounds.width * CGFloat(indexPath.item), y: 0), animated: true)
+            return
+        }
+        dataSource.showDetail(item: indexPath.item)
+//
+//        showCardDescription(for: indexPath)
+    }
 }
 
 // MARK: - CardsLayoutDelegate

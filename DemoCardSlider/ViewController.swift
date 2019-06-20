@@ -30,6 +30,10 @@ class ViewController: UIViewController {
 }
 
 extension ViewController: CardSliderDataSource {
+    func showDetail(item: Int) {
+        print("点击了第\(item)个卡片")
+    }
+    
 	func item(for index: Int) -> CardSliderItem {
 		return movies[index]
 	}
@@ -37,4 +41,6 @@ extension ViewController: CardSliderDataSource {
 	func numberOfItems() -> Int {
 		return movies.count
 	}
+    
+    
 }
