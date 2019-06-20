@@ -4,7 +4,7 @@ import UIKit
 /// Model for a card.
 public protocol CardSliderItem {
 	/// The image for the card.
-	var imageView: UIImageView { get }
+//    var imageView: UIImageView { get }
 	
 	/// Rating from 0 to 5. If set to nil, rating view will not be displayed for the card.
 	var rating: Int? { get }
@@ -27,6 +27,8 @@ public protocol CardSliderDataSource: class {
 	func numberOfItems() -> Int
     
     func showDetail(item: Int)
+    
+    func configCell(cellImageView: UIImageView, item: Int)
 }
 
 /// A view controller displaying a slider of cards, represented by CardSliderItems.
@@ -264,8 +266,10 @@ extension CardSliderViewController: UICollectionViewDelegate, UICollectionViewDa
 	
 	public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
 		guard let cell = cell as? CardSliderCell else { return }
-		let item = dataSource.item(for: dataSource.numberOfItems() - indexPath.item - 1)
-		cell.imageView = item.imageView
+//        let item = dataSource.item(for: dataSource.numberOfItems() - indexPath.item - 1)
+
+        dataSource.configCell(cellImageView: cell.imageView, item: indexPath.item)
+//        cell.imageView = item.imageView
 	}
 	
 	public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

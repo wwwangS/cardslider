@@ -12,7 +12,10 @@ struct Movie: CardSliderItem {
 
 class ViewController: UIViewController {
 	let movies = [
-        Movie(imageView: UIImageView(image: UIImage(named: "")), rating: 3, title: "", subtitle: "", description: "")
+        Movie(imageView: UIImageView(image: UIImage(named: "")), rating: 3, title: "1", subtitle: "1", description: ""),
+        Movie(imageView: UIImageView(image: UIImage(named: "")), rating: 3, title: "2", subtitle: "2", description: ""),
+        Movie(imageView: UIImageView(image: UIImage(named: "")), rating: 3, title: "3", subtitle: "3", description: ""),
+        Movie(imageView: UIImageView(image: UIImage(named: "")), rating: 3, title: "4", subtitle: "4", description: "")
 //            Movie(image: #imageLiteral(resourceName: "9"), rating: 5, title: "Blade Runner 2049", subtitle: "2017", description: "A young blade runner's discovery of a long-buried secret leads him to track down former blade runner Rick Deckard, who's been missing for thirty years."),
 //            Movie(image: #imageLiteral(resourceName: "1"), rating: 3, title: "Back to the Future", subtitle: nil, description: nil),
 //            Movie(image: #imageLiteral(resourceName: "8"), rating: 2, title: "Ghostbusters", subtitle: "2016", description: "Physicists Abby Yates and Erin Gilbert are authors of a research book which posits the existence of paranormal phenomena, such as ghosts. While Abby continued to study the paranormal at a technical college with eccentric engineer Jillian Holtzmann, Erin, now a professor at Columbia University, disowned the work, fearing it will impact her tenure. When Abby republishes the book, Erin convinces her to agree to remove the book from publication in exchange by helping Abby and Jillian in a paranormal investigation. They witness a malevolent ghost, restoring Erin's belief in the paranormal, but video footage of the investigation is posted online, and Erin is fired by the university. She joins Abby and Jillian to set up new offices above a Chinese restaurant, calling themselves \"Conductors of the Metaphysical Examination\". They build equipment to study and capture ghosts, and hire the dimwitted but handsome Kevin Beckman as a receptionist."),
@@ -43,5 +46,12 @@ extension ViewController: CardSliderDataSource {
 		return movies.count
 	}
     
+    func configCell(cellImageView: UIImageView, item: Int) {
+        if item == 0 {
+            cellImageView.image = UIImage(named: "star")
+        } else {
+            cellImageView.image = UIImage(named: "9")
+        }
+    }
     
 }
