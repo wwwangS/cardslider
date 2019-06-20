@@ -29,6 +29,7 @@ class ViewController: UIViewController {
 		super.viewDidAppear(animated)
 		let cardSlider = CardSliderViewController.with(dataSource: self)
 		cardSlider.title = "Movies"
+        cardSlider.view.backgroundColor = .orange
 		present(cardSlider, animated: true, completion: nil)
 	}
 }
@@ -48,7 +49,7 @@ extension ViewController: CardSliderDataSource {
     
     func configCell(cellImageView: UIImageView, item: Int) {
         if item == 0 {
-            cellImageView.image = UIImage(named: "star")
+            cellImageView.image = UIImage(named: "7")
         } else {
             cellImageView.image = UIImage(named: "9")
         }

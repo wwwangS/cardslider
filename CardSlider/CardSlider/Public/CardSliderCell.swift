@@ -19,11 +19,15 @@ class CardSliderCell: UICollectionViewCell, ParallaxCardCell {
 	open var imageView = UIImageView()
 	open var shadeView = UIView()
 	open var highlightView = UIView()
-	
+	open var alphaView = UIView()
+    
 	private var latestBounds: CGRect?
 	
 	open override func awakeFromNib() {
 		super.awakeFromNib()
+        
+        
+        
 		imageView.contentMode = .scaleAspectFill
 		contentView.addSubview(imageView)
 		shadeView.backgroundColor = .white
@@ -31,6 +35,10 @@ class CardSliderCell: UICollectionViewCell, ParallaxCardCell {
 		highlightView.backgroundColor = .black
 		highlightView.alpha = 0
 		contentView.addSubview(highlightView)
+        
+        contentView.addSubview(alphaView)
+        alphaView.backgroundColor = .black
+        alphaView.alpha = 0.4
 	}
 	
 	open func setShadeOpacity(progress: CGFloat) {
@@ -69,6 +77,11 @@ class CardSliderCell: UICollectionViewCell, ParallaxCardCell {
 		zoom = min(zoom, 1)
 		imageView.frame = bounds.applying(CGAffineTransform(scaleX: 1 + (1 - zoom), y: 1 + (1 - zoom)))
 		imageView.center = CGPoint(x: bounds.midX, y: bounds.midY)
+        
+        alphaView.frame = bounds.applying(CGAffineTransform(scaleX: 1 + (1 - zoom), y: 1 + (1 - zoom)))
+        alphaView.center = CGPoint(x: bounds.midX, y: bounds.midY)
+        
+        
 	}
 	
 	open func updateMask() {
