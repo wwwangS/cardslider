@@ -4,6 +4,7 @@ import UIKit
 struct CardTitle: Equatable {
 	let title: String?
 	let subtitle: String?
+    let textColor: UIColor?
 }
 
 class CardTitleView: UIView {
@@ -22,12 +23,15 @@ class CardTitleView: UIView {
 		secondTitle = nil
 		titleLabel.alpha = 1
 		subtitleLabel.alpha = 1
+        
 	}
 	
 	func set(title: CardTitle) {
 		reset()
 		titleLabel.text = title.title
 		subtitleLabel.text = title.subtitle
+        titleLabel.textColor = title.textColor
+        subtitleLabel.textColor = title.textColor
 	}
 	
 	func transition(between firstTitle: CardTitle, secondTitle: CardTitle, progress: CGFloat) {

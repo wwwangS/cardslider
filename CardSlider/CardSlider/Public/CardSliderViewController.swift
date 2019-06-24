@@ -11,12 +11,13 @@ public protocol CardSliderItem {
 	
 	/// Will be displayed in the title view below the card.
 	var title: String { get }
-	
+	var titleColor: UIColor? { get }
 	/// Will be displayed under the main title for the card.
 	var subtitle: String? { get }
 	
 	/// Will be displayed as scrollable text in the expanded view.
 	var description: String? { get }
+    
 }
 
 public protocol CardSliderDataSource: class {
@@ -55,6 +56,8 @@ open class CardSliderViewController: UIViewController, UIScrollViewDelegate {
 	private var animator: UIViewPropertyAnimator?
 	private let cellID = "CardCell"
 	
+    open var starImage: UIImage?
+    
     @IBAction func showDetailEvent(_ sender: UIButton) {
         dataSource.showDetail(item: sender.tag)
     }
@@ -85,8 +88,10 @@ open class CardSliderViewController: UIViewController, UIScrollViewDelegate {
 	open override var title: String? {
 		didSet {
 			titleLabel?.text = title
+            
 		}
 	}
+    
 	
 	open override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
@@ -94,12 +99,17 @@ open class CardSliderViewController: UIViewController, UIScrollViewDelegate {
 		self.collectionView.collectionViewLayout.invalidateLayout()
 		self.collectionView.layoutIfNeeded()
 		self.prepareFirstCard()
+        
+        guard let stars = ratingView.arrangedSubviews.filter({ $0 is UIImageView }) as? [UIImageView] else { return }
+        stars.forEach { star in
+            star.image = starImage
+        }
 	}
 	
 	private func prepareFirstCard() {
 		guard let layout = collectionView.collectionViewLayout as? CardsLayout else { return }
 		let item = dataSource.item(for: dataSource.numberOfItems() - layout.currentPage - 1)
-		cardTitleView.set(title: CardTitle(title: item.title, subtitle: item.subtitle))
+        cardTitleView.set(title: CardTitle(title: item.title, subtitle: item.subtitle, textColor: item.titleColor))
 	}
 	
 	// MARK: - Detailed view animations
@@ -148,7 +158,7 @@ open class CardSliderViewController: UIViewController, UIScrollViewDelegate {
 		guard scrollView == collectionView else { return }
 		guard let layout = collectionView.collectionViewLayout as? CardsLayout else { return }
 		let item = dataSource.item(for: dataSource.numberOfItems() - layout.currentPage - 1)
-		cardTitleView.set(title: CardTitle(title: item.title, subtitle: item.subtitle))
+		cardTitleView.set(title: CardTitle(title: item.title, subtitle: item.subtitle, textColor: item.titleColor))
 	}
 	
 	private func resetCardAnimation() {
@@ -292,8 +302,8 @@ extension CardSliderViewController: CardsLayoutDelegate {
 		let nextItem = dataSource.item(for: dataSource.numberOfItems() - nextIndex - 1)
 		
 		ratingView.rating = (progress > 0.5 ? nextItem : currentItem).rating
-		let currentTitle = CardTitle(title: currentItem.title, subtitle: currentItem.subtitle)
-		let nextTitle = CardTitle(title: nextItem.title, subtitle: nextItem.subtitle)
+		let currentTitle = CardTitle(title: currentItem.title, subtitle: currentItem.subtitle, textColor: currentItem.titleColor)
+		let nextTitle = CardTitle(title: nextItem.title, subtitle: nextItem.subtitle, textColor: currentItem.titleColor)
 		cardTitleView.transition(between: currentTitle, secondTitle: nextTitle, progress: progress)
 	}
 }
